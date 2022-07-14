@@ -36,6 +36,12 @@ const authService = {
   },
 
   validateToken: (token) => {
+    if (!token) {
+      const err = new Error('Token not found');
+      err.name = 'UnauthorizedError';
+      throw err;
+    }
+    
     const data = jwtService.validateToken(token);
 
     return data;

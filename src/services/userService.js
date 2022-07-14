@@ -18,6 +18,13 @@ const usersService = {
     return value;
   },
 
+  list: async () => {
+    const users = await db.User.findAll({
+      attributes: { exclude: ['password'] },
+    });
+    return users;
+  },
+
   create: async ({ displayName, email, password, image }) => {
     const user = await db.User.create({ displayName, email, password, image });
     const token = jwtService.createToken(user.email);
