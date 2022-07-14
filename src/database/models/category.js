@@ -6,9 +6,10 @@ const createCategory = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    category: DataTypes.STRING,
+    // category: DataTypes.STRING,
     name: DataTypes.STRING,
   }, {
+    tableName: 'Categories',
     timestamps: false,
   });
 
