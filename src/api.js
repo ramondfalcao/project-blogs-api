@@ -3,6 +3,7 @@ require('express-async-errors');
 const express = require('express');
 // const authController = require('./controllers/authController');
 const authRouter = require('./routers/authRouter');
+const categoryRouter = require('./routers/categoryRouter');
 const userRouter = require('./routers/userRouter');
 
 const app = express();
@@ -13,7 +14,7 @@ app.use('/login', authRouter);
 
 app.use('/user', userRouter);
 
-// app.use(authController.validateToken);
+app.use('/categories', categoryRouter);
 
 app.use((err, _req, res, _next) => {
   const { name, message } = err;
