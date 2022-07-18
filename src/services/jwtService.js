@@ -9,13 +9,19 @@ const jwtService = {
 
   validateToken: (token) => {
     try {
-      const data = jwt.verify(token, process.env.JWT_SECRET);
-      return data;
+      const value = jwt.verify(token, process.env.JWT_SECRET);
+      return value;
     } catch (e) {
       const error = new Error('Expired or invalid token');
       error.name = 'UnauthorizedError';
       throw error; 
     }
+  },
+
+  getUserEmail: (token) => {
+    const { data } = jwt.verify(token, process.env.JWT_SECRET);
+
+    return data;
   },
 };
 

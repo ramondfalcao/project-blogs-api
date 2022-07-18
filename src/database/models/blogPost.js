@@ -9,10 +9,16 @@ const createBlogPost = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     userId: DataTypes.INTEGER,
-    published: DataTypes.STRING,
-    updated:  DataTypes.STRING,
+    updated:{
+      type: DataTypes.DATE
+    },
+    published: {
+      type: DataTypes.DATE
+    }
   }, {
     timestamps: false,
+    createdAt: 'published',
+    updateAt: 'updated'
   });
 
   BlogPost.associate = (db) => {

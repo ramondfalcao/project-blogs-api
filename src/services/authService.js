@@ -42,9 +42,9 @@ const authService = {
       throw err;
     }
     
-    const data = jwtService.validateToken(token);
+    const value = jwtService.validateToken(token);
 
-    return data;
+    return value;
   },
 };
 

@@ -9,11 +9,11 @@ const authController = {
     res.status(200).json({ token });
   },
 
-  validateToken: (req, res, next) => {
+  validateToken: async (req, _res, next) => {
     const { authorization } = req.headers;
    
-    authService.validateToken(authorization);
-
+    await authService.validateToken(authorization);
+    
     next();
   },
 };
