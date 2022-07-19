@@ -17,10 +17,10 @@ const postController = {
     return res.status(201).json(dataValues);
   },
 
-  // list: async (_req, res) => {
-  //   const users = await postService.list();
-  //   res.status(200).json(users);
-  // },
+  list: async (_req, res) => {
+    const users = await postService.list();
+    res.status(200).json(users);
+  },
 };
 
 module.exports = postController;

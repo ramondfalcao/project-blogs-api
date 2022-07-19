@@ -55,12 +55,25 @@ const postService = {
     // }
   },
 
-  // list: async () => {
-  //   const posts = await db.BlogPost.findAll({
-  //     attributes: { exclude: ['password'] },
-  //   });
-  //   return posts;
-  // },
+  list: async () => {
+    const listPosts = await db.BlogPost.findAll({
+      include: [{ model: db.User, as: 'User', attributes: { exclude: 'password' } },
+      { model: db.Category, as: 'Category' }],
+    });
+    const filterPost = listPosts.map(({ dataValues }) => dataValues)
+    .map(({ id, title, content, userId, published, updated, User, Category }) => ({
+      id,
+      title,
+      content,
+      userId,
+      published,
+      updated,
+      user: User.dataValues,
+      categories: Category,
+    })); 
+    console.log(filterPost);
+    return filterPost;
+  },
 };
 
 module.exports = postService;
