@@ -21,6 +21,12 @@ const postController = {
     const users = await postService.list();
     res.status(200).json(users);
   },
+
+  findById: async (req, res) => {
+    const user = await postService.findById(req.params.id);
+
+    res.status(200).json(user);
+  },
 };
 
 module.exports = postController;

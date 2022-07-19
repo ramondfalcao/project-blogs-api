@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 const Joi = require('joi');
 // const Sequelize = require('sequelize');
 const db = require('../database/models');
@@ -34,7 +35,7 @@ const postService = {
   },
 
   create: async (title, content, userEmail, categoryIds) => {
-    // try {
+    try {
       const user = await db.User.findOne({ where: { email: userEmail } });
       const { id } = user.dataValues;
 
@@ -49,10 +50,10 @@ const postService = {
       await db.PostCategory.bulkCreate(postCategories);
       console.log(postCreated);
       return postCreated;
-    // } catch (err) {
-    //   const e = new Error('Algo deu errado');
-    //   throw e;
-    // }
+    } catch (err) {
+      const e = new Error('Algo deu errado');
+      throw e;
+    }
   },
 
   list: async () => {
@@ -71,9 +72,34 @@ const postService = {
       user: User.dataValues,
       categories: Category,
     })); 
-    console.log(filterPost);
+
     return filterPost;
   },
+
+  findById: async (atualId) => {
+    const listPosts = await db.BlogPost.findByPk(atualId, {
+      include: [{ model: db.User, as: 'User', attributes: { exclude: 'password' } },
+      { model: db.Category, as: 'Category' }],
+    });
+    
+    if (!listPosts) {
+      const e = new Error('Post does not exist');
+      e.name = 'NotFoundError';
+      throw e;
+    }
+    const newObject = {
+      id: listPosts.dataValues.id,
+      title: listPosts.dataValues.title,
+      content: listPosts.dataValues.content,
+      userId: listPosts.dataValues.userId,
+      published: listPosts.dataValues.published,
+      updated: listPosts.dataValues.updated,
+      user: listPosts.dataValues.User.dataValues,
+      categories: listPosts.dataValues.Category,
+    };
+    return newObject;
+  },
+
 };
 
 module.exports = postService;
