@@ -1,10 +1,23 @@
-/* eslint-disable max-lines-per-function */
 const Joi = require('joi');
 // const Sequelize = require('sequelize');
 const db = require('../database/models');
 // const config = require('../database/config/config');
 
 // const sequelize = new Sequelize(config.development);
+
+const createObject = (listPosts) => {
+  const newObject = { id: listPosts.dataValues.id,
+    title: listPosts.dataValues.title,
+    content: listPosts.dataValues.content,
+    userId: listPosts.dataValues.userId,
+    published: listPosts.dataValues.published,
+    updated: listPosts.dataValues.updated,
+    user: listPosts.dataValues.User.dataValues,
+    categories: listPosts.dataValues.Category,
+  };
+
+  return newObject;
+};
 
 const postService = {
   validateBody: (data) => {
@@ -87,16 +100,9 @@ const postService = {
       e.name = 'NotFoundError';
       throw e;
     }
-    const newObject = {
-      id: listPosts.dataValues.id,
-      title: listPosts.dataValues.title,
-      content: listPosts.dataValues.content,
-      userId: listPosts.dataValues.userId,
-      published: listPosts.dataValues.published,
-      updated: listPosts.dataValues.updated,
-      user: listPosts.dataValues.User.dataValues,
-      categories: listPosts.dataValues.Category,
-    };
+
+    const newObject = createObject(listPosts);
+    
     return newObject;
   },
 
