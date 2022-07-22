@@ -18,20 +18,27 @@ const postController = {
   },
 
   list: async (_req, res) => {
-    const users = await postService.list();
+    const posts = await postService.list();
     
-    res.status(200).json(users);
+    res.status(200).json(posts);
   },
 
   findById: async (req, res) => {
-    const user = await postService.findById(req.params.id);
+    const post = await postService.findById(req.params.id);
 
-    res.status(200).json(user);
+    res.status(200).json(post);
   },
 
   edit: async (req, res) => {
+    const { authorization } = req.headers;
     const { id } = req.params;
+
     const request = await postService.validateBodyUpdated(req.body);
+    const userEmail = await jwtService.getUserEmail(authorization);
+    const post = await postService.findById(id);
+
+    await postService.userAuthorization(post.userId, userEmail);
+   
     await postService.edit(request, id);
     const editedPost = await postService.findById(id);
 

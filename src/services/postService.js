@@ -125,6 +125,16 @@ const postService = {
     });
   },
 
+  userAuthorization: async (postId, userEmail) => {
+    const user = await db.User.findOne({ where: { email: userEmail } });
+    const { id } = user.dataValues;
+
+    if (postId !== id) {
+      const e = new Error('Unauthorized user');
+      e.name = 'UnauthorizedError';
+      throw e;
+    }
+  },
 };
 
 module.exports = postService;
