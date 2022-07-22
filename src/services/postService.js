@@ -107,14 +107,14 @@ const postService = {
       include: [{ model: db.User, as: 'User', attributes: { exclude: 'password' } },
       { model: db.Category, as: 'Category' }],
     });
-    console.log();
+
     if (!post) {
       const e = new Error('Post does not exist');
       e.name = 'NotFoundError';
       throw e;
     }
     
-    return console.log(createObject(post));
+    return createObject(post);
   },
 
   edit: async (request, atualId) => {
