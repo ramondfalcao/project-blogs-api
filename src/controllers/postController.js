@@ -19,6 +19,7 @@ const postController = {
 
   list: async (_req, res) => {
     const users = await postService.list();
+    
     res.status(200).json(users);
   },
 
@@ -26,6 +27,15 @@ const postController = {
     const user = await postService.findById(req.params.id);
 
     res.status(200).json(user);
+  },
+
+  edit: async (req, res) => {
+    const { id } = req.params;
+    const request = await postService.validateBodyUpdated(req.body);
+    await postService.edit(request, id);
+    const editedPost = await postService.findById(id);
+
+    res.status(200).json(editedPost);
   },
 };
 

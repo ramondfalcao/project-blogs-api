@@ -1,9 +1,5 @@
 const Joi = require('joi');
-// const Sequelize = require('sequelize');
 const db = require('../database/models');
-// const config = require('../database/config/config');
-
-// const sequelize = new Sequelize(config.development);
 
 const createObject = (listPosts) => {
   const newObject = { id: listPosts.dataValues.id,
@@ -25,6 +21,23 @@ const postService = {
       title: Joi.string().required(),
       content: Joi.string().required(),
       categoryIds: Joi.array().required(),
+    });
+
+    const { error, value } = schema.validate(data);
+
+    if (error) {
+    const e = new Error('Some required fields are missing');
+    e.name = 'ValidationError';
+    throw e;
+    } 
+
+    return value;
+  },
+
+  validateBodyUpdated: (data) => {
+    const schema = Joi.object({
+      title: Joi.string().required(),
+      content: Joi.string().required(),
     });
 
     const { error, value } = schema.validate(data);
@@ -90,20 +103,26 @@ const postService = {
   },
 
   findById: async (atualId) => {
-    const listPosts = await db.BlogPost.findByPk(atualId, {
+    const post = await db.BlogPost.findByPk(atualId, {
       include: [{ model: db.User, as: 'User', attributes: { exclude: 'password' } },
       { model: db.Category, as: 'Category' }],
     });
-    
-    if (!listPosts) {
+    console.log();
+    if (!post) {
       const e = new Error('Post does not exist');
       e.name = 'NotFoundError';
       throw e;
     }
-
-    const newObject = createObject(listPosts);
     
-    return newObject;
+    return console.log(createObject(post));
+  },
+
+  edit: async (request, atualId) => {
+    await db.BlogPost.update(request, {
+      where: {
+        id: atualId,
+      },
+    });
   },
 
 };
