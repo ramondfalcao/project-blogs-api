@@ -74,7 +74,6 @@ const postService = {
       }));
       
       await db.PostCategory.bulkCreate(postCategories);
-      console.log(postCreated);
       return postCreated;
     } catch (err) {
       const e = new Error('Algo deu errado');
@@ -117,10 +116,10 @@ const postService = {
     return createObject(post);
   },
 
-  edit: async (request, atualId) => {
+  edit: async (request, id) => {
     await db.BlogPost.update(request, {
       where: {
-        id: atualId,
+        id,
       },
     });
   },
@@ -132,6 +131,19 @@ const postService = {
     if (postId !== id) {
       const e = new Error('Unauthorized user');
       e.name = 'UnauthorizedError';
+      throw e;
+    }
+  },
+
+  delete: async (userEmail) => {
+    const user = await db.User.findOne({ where: { email: userEmail } });
+    const { id } = user.dataValues;
+    const rows = await db.BlogPost.destroy({ where: { id } });
+    console.log(`deleted row(s): ${rows}`);
+    
+    if (!rows) {
+      const e = new Error('Post does not exist');
+      e.name = 'NotFoundError';
       throw e;
     }
   },

@@ -13,7 +13,6 @@ const postController = {
     const { dataValues } = await postService
     .create(request.title, request.content, userEmail, request.categoryIds);
     
-    console.log(dataValues);
     return res.status(201).json(dataValues);
   },
 
@@ -43,6 +42,18 @@ const postController = {
     const editedPost = await postService.findById(id);
 
     res.status(200).json(editedPost);
+  },
+
+  delete: async (req, res) => {
+    const { authorization } = req.headers;
+    const { id } = req.params;
+
+    const userEmail = await jwtService.getUserEmail(authorization);
+    const post = await postService.findById(id);
+    await postService.userAuthorization(post.userId, userEmail);
+
+    await postService.delete(userEmail);
+    res.sendStatus(204);
   },
 };
 

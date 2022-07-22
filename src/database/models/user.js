@@ -11,11 +11,12 @@ const createUser = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     image: DataTypes.STRING,
   }, {
+    tableName: 'Users',
     timestamps: false,
   });
 
   User.associate = (db) => {
-    User.hasMany(db.BlogPost, { as: 'BlogPost', foreignKey: 'userId' });
+    User.hasMany(db.BlogPost, { as: 'BlogPost', key: 'userId' });
   }
 
   return User;
