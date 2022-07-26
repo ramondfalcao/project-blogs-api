@@ -1,3 +1,4 @@
+const jwtService = require('../services/jwtService');
 const { checkIfExists } = require('../services/userService');
 const usersService = require('../services/userService');
 
@@ -19,6 +20,16 @@ const usersController = {
     const user = await usersService.findById(req.params.id);
 
     res.status(200).json(user);
+  },
+
+  delete: async (req, res) => {
+    const { authorization } = req.headers;
+    
+    const userEmail = await jwtService.getUserEmail(authorization);
+
+    await usersService.delete(userEmail);
+
+    res.sendStatus(204);
   },
 
 };

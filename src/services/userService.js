@@ -55,6 +55,18 @@ const usersService = {
     return user;
   },
 
+  delete: async (userEmail) => {
+    const user = await db.User.findOne({ where: { email: userEmail } });
+    const { id } = user.dataValues;
+    const rows = await db.User.destroy({ where: { id } });
+    console.log(`deleted row(s): ${rows}`);
+
+    if (!rows) {
+      const e = new Error('User does not exist');
+      e.name = 'NotFoundError';
+      throw e;
+    }
+  },
 };
 
 module.exports = usersService;
